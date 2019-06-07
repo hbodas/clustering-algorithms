@@ -1,6 +1,8 @@
 
 """
 File that contains code to randomly sample data from Gaussians
+
+TODO: switch to sklearn syntetic make_blobs.
 """
 
 import numpy, math

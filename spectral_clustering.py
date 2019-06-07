@@ -7,6 +7,8 @@ Von Luxburg, Ulrike. "A tutorial on spectral clustering." Statistics and
 computing 17.4 (2007): 395-416.
 
 The code uses k-means clustering provided in by the scikit-learn library
+
+TODO modifiy to use sparse arrays.
 """
 
 import numpy
