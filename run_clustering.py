@@ -7,10 +7,15 @@ plots of the data.
 from spectral_clustering import *
 from gen_gaussians import *
 import matplotlib.pyplot as plt
-import sklearn
 
 """
 Available functions to generate and cluster data
+
+generate_gaussian_data(n, means (optional), cov (optional)
+    Function to generate data around means given in the means array. cov
+    represents the covariance matrix used to generate the data.
+
+spec_cluster_data(
 """
 
 
