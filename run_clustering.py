@@ -3,24 +3,42 @@
 This is the mainfile to run the clustering algorithm, and include some helpful
 plots of the data.
 """
+# TODO modify to run as a script from the terminal, and add 3D plotting. Probably
+# write separate functions for plotting 2D and 3D stuff. Also need to add plots of
+# eigenthings
 
 from spectral_clustering import *
-from gen_gaussians import *
+from gen_data import *
 import matplotlib.pyplot as plt
 
 """
-Available functions to generate and cluster data
+Available functions to generate and cluster data (* indicates optional
+arguments.)
 
-generate_gaussian_data(n, means (optional), cov (optional)
+generate_gaussians(n, means*, cov*)
     Function to generate data around means given in the means array. cov
-    represents the covariance matrix used to generate the data.
+    represents the covariance matrix used to generate the data in 2D
 
-spec_cluster_data(
+generate_blobs(n, num_centers*)
+    Uses sklearn.datasets.make_blobs to generate random normally distributed
+    data around a number of centers given by num_centers. Data is more spread
+    out than in default arguments to generate_gaussian_data
+
+generate_circles(n, noise*, factor*)
+    Generates data with noise around two concentric circles. The argument factor
+    (which must be between 0 and 1) gives the ratio between the radii of the
+    inner and outer circle
+
+generate_moons(n, noise*)
+    Generates data around two half moons, with given noise
 """
 
 
-n = 1500
-data = generate_gaussian_data(n)
+n = 1000
+#  data = generate_gaussians(n)
+#  data = generate_blobs(n)
+#  data = generate_circles(n)
+data = generate_moons(n)
 #  print(data)
 
 x = []
