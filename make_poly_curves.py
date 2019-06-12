@@ -1,8 +1,8 @@
 """
 File that contains functions for generation of noisy data along univariate
 polynomial curves. Evauluates polynomials at x coordinates selected uniformly at
-random from the given range, and adds a gaussian noise to the curves. Generates
-a total of n points.
+random from the given range, and adds noise to the curves. Generates a total of
+n points.
 """
 
 # TODO add ways to change the noise distribution as well as the x coordinate

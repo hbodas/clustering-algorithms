@@ -7,6 +7,7 @@ sampled points, where each point is represented by a numpy array.
 
 import numpy, math
 from sklearn.datasets import make_blobs, make_moons, make_circles
+from make_poly_curves import *
 
 def generate_gaussians(n, means=[[0,0], [10,6], [6,-5]], cov=[[3,0],[0,3]]):
     """
@@ -67,3 +68,16 @@ def generate_moons(n, noise = 0.07):
 
     print("Generated {} data points around double moons".format(n, flush=True))
     return data
+
+def generate_poly_data(n, curves=None, bounds=(-10, 10), noise=1):
+    """
+    Generates data along curves defined in the array curves
+    """
+    if curves == None:
+        curves = [lambda x : 8+math.cos(x), lambda x : 2*math.sin(x) + 0.5*x - 4]
+
+    data = gen_2D_poly_data(n, curves, bounds, noise)
+
+    return data
+
+
