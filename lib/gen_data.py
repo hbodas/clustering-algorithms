@@ -9,28 +9,6 @@ import numpy, math
 from sklearn.datasets import make_blobs, make_moons, make_circles
 from make_poly_curves import *
 
-def generate_gaussians(n, means=[[0,0], [10,6], [6,-5]], cov=[[3,0],[0,3]]):
-    """
-    Generates a sample of data drawn from a number of Gaussian distributions
-    with means given in the array means, and covariance matrix given by cov.
-    """
-    # validate the arguments passed in
-    dimensions = len(means[0])
-
-    # sample the data
-    data = None
-    for i in range(n):
-        j = numpy.random.randint(0,len(means))
-        new_data = [numpy.random.multivariate_normal(means[j], cov)]
-        if i == 0:
-            data = numpy.array(new_data)
-        else:
-            data = numpy.append(data, new_data, axis = 0)
-
-    print("Generated {} data points around {} means".format(n, len(means),\
-        flush=True))
-    return data
-
 def generate_blobs(n, num_centers=3):
     """
     Uses the make_blobs function in the sklearn.datasets library to generate
