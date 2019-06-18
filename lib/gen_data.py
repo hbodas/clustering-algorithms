@@ -7,7 +7,7 @@ sampled points, where each point is represented by a numpy array.
 
 import numpy, math
 from sklearn.datasets import make_blobs, make_moons, make_circles
-from make_poly_curves import *
+from lib.make_poly_curves import *
 
 def generate_blobs(n, num_centers=3):
     """

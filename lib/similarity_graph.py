@@ -38,13 +38,14 @@ def find_nearest_neighbors(data, x, num_neighbors):
     # find k+1 elements since first element will always be the point itself
     return list(map(lambda x : x[1], L[:num_neighbors+1]))
 
-def construct_graph(data):
+def construct_graph(data, sim_fn = similarity_exp, num_neighbors = None):
     """
     Constructs the similarity graph for the given data and returns the weight
     matrix W.
 
     Similarity between two points is 0 if neither are of the first few neighbors
     of the other. If not, then a gaussian similarity function is used.
+    Alternatively, a similarity function can be specified.
 
     The number of neighbors is found by taking the log of the number of data
     points
@@ -53,7 +54,10 @@ def construct_graph(data):
 
     num_points = len(data)
     W = numpy.zeros((num_points, num_points))
-    num_neighbors = math.floor(math.sqrt(num_points))
+    if num_neighbors == None:
+        num_neighbors = math.floor(math.log(num_points))
+    else:
+        num_neighbors = min(num_neighbors, num_points - 1)
 
     for i in range(num_points):
         nearest_neighbors = find_nearest_neighbors(data, data[i], \
