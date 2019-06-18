@@ -7,6 +7,7 @@ plots of the data.
 # write separate functions for plotting 2D and 3D stuff. Also need to add plots of
 # eigenthings
 # TODO move most of the code to the individual clustering files
+# TODO sanitize input to the plotting functions
 
 from spectral_clustering import *
 from lib.gen_data import *
@@ -37,11 +38,26 @@ generate_curve_data(n, curves*, bounds*, noise*)
 
 
 n = 1000
-#  data = generate_blobs(n)
-#  data = generate_circles(n)
-#  data = generate_moons(n)
-data = generate_poly_data(n)
-#  print(data)
+
+while True:
+    shape = input("""Pick a shape to generate synthetic data in:
+    1: Gaussians 
+    2: 2 Concentric Circles 
+    3: 2 half-moons 
+    4: Two predefined curves
+>>> """)
+    try:
+        shape = int(shape)
+        break
+    except:
+        pass
+
+data = {
+        1 : generate_blobs,
+        2 : generate_circles,
+        3 : generate_moons,
+        4 : generate_poly_data,
+        }[shape](n)
 
 x = []
 y = []
