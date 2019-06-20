@@ -17,7 +17,7 @@ def generate_blobs(n, num_centers=3):
     """
     # sample the data
     data = make_blobs(n_samples = n, n_features = 2, centers = num_centers, \
-            cluster_std = 1.8, center_box = (-10, 10), shuffle = True, \
+            cluster_std = 1.4, center_box = (-10, 10), shuffle = True, \
             random_state = None)[0]
 
     print("Generated {} data points around {} means".format(n, num_centers,\
@@ -47,12 +47,12 @@ def generate_moons(n, noise = 0.07):
     print("Generated {} data points around double moons".format(n, flush=True))
     return data
 
-def generate_poly_data(n, curves=None, bounds=(-10, 10), noise=1):
+def generate_poly_data(n, curves=None, bounds=(-10, 10), noise=0.7):
     """
     Generates data along curves defined in the array curves
     """
     if curves == None:
-        curves = [lambda x : 8+math.cos(x), lambda x : 2*math.sin(x) + 0.5*x - 4]
+        curves = [lambda x : 8+math.cos(x), lambda x : 2*math.sin(x) + 0.5*x]
 
     data = gen_2D_poly_data(n, curves, bounds, noise)
 

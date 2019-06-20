@@ -14,7 +14,7 @@ def norm(x):
     """
     return math.sqrt(sum(map(lambda x : x**2, x)))
 
-def similarity_exp(x, y, sigma = 1.0):
+def similarity_exp(x, y, sigma = 0.6):
     """
     Returns the similarity of the two points x and y, given by 
     exp((norm(x-y)**2)/(2*sigma**2))

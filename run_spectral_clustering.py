@@ -48,8 +48,10 @@ while True:
 >>> """)
     try:
         shape = int(shape)
-        break
+        if shape < 5 and 0 < shape:
+            break
     except:
+        print("Invalid input. Please try again")
         pass
 
 data = {
