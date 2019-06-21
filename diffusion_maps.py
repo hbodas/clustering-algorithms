@@ -7,7 +7,7 @@ discussion in the paper:
 Coifman, Ronald R., and Stéphane Lafon. "Diffusion maps." Applied and
 computational harmonic analysis 21.1 (2006): 5-30.
 
-This implementation does not implement the full algorithm, the number fo
+This implementation does not implement the full algorithm, the number of
 dimensions to embed in passed be passed in as an argument.
 """
 
@@ -52,3 +52,6 @@ def embed_data(data, em_dim=2, t=1, alpha=1):
     em_mat = numpy.array(em_mat)
 
     return list(map(lambda x : numpy.matmul(em_mat, x), data))
+
+def make_plots():
+    pass
