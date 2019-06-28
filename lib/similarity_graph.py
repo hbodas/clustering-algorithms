@@ -47,8 +47,8 @@ def construct_graph(data, sim_fn = similarity_exp, num_neighbors = None):
     of the other. If not, then a gaussian similarity function is used.
     Alternatively, a similarity function can be specified.
 
-    The number of neighbors is found by taking the log of the number of data
-    points
+    The number of neighbors is computed as a logarithm of the number of data
+    points if no argument is specified
     """
     print("Constructing weight matrix...")
 

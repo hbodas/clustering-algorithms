@@ -8,7 +8,7 @@ generated as described here:
 import math
 import numpy
 
-def generate_swiss_roll():
+def generate_swiss_roll(n=400):
     """
     Generates the swiss roll data set by sampling in 2D around for Gaussians
     centered at (7.5, 7.5), (7.5, 12.5), (12.5, 12.5) and (12.5, 7.5), with the
@@ -18,23 +18,20 @@ def generate_swiss_roll():
     Returns a data array and an array containing the colormap values, so the
     points can be nicely plotted
     """
+    # set parameters
+    length_phi = 15   #length of swiss roll in angular direction
+    length_Z = 15     #length of swiss roll in z direction
+    sigma = 0.1       #noise strength
 
-    centers = [(7.5, 7.5), (7.5, 12.5), (12.5, 7.5), (12.5, 12.5)]
-    data = dict()
-    for i in range(4):
-        data[i] = numpy.random.multivariate_normal(centers[i], \
-                [[1,0],[0,1]], 400)
+    # create dataset
+    phi = length_phi*numpy.random.rand(n)
+    xi = numpy.random.rand(n)
+    Z = length_Z*numpy.random.rand(n)
+    X = 1./6*(phi + sigma*xi)*numpy.sin(phi)
+    Y = 1./6*(phi + sigma*xi)*numpy.cos(phi)
 
-    # append everything to get a nice list
-    for i in range(1, 4):
-        data[0] = numpy.append(data[0], data[i], axis=0)
-    pre_data = data[0]
+    swiss_roll = numpy.array([X, Y, Z]).transpose()
+    colors = list(map(lambda x:x**2, phi))
 
-    # get the colormap
-    cs = numpy.array([point[0]**2 for point in pre_data])
+    return [swiss_roll, colors]
 
-    # get the data points
-    data = numpy.array([(x*math.cos(x), y, x*math.sin(x)) for \
-        (x, y) in pre_data])
-
-    return [data, cs]

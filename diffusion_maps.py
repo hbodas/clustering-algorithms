@@ -14,44 +14,73 @@ dimensions to embed in passed be passed in as an argument.
 import numpy, math
 from lib.similarity_graph import *
 
-def matrix_power(M, t):
-    """ 
-    Computes the matrix power M^t recursively. Note: t must be a non-negative
-    integer. Returns M^t as a numpy array.
+def embed_data(data, **kwargs):
     """
-    if t == 0: return M
-    else: return numpy.matmul(M, matrix_power(M, t-1))
+    Finds an embedding of the data using the diffusion maps algorithm. k is the
+    kernel function.
 
-def embed_data(data, em_dim=2, t=1, alpha=1):
-    """
-    Finds an embedding of the data into the number of dimensions given by
-    em_dim. Runs the main diffusion maps algorithm with parameter alpha for the
-    anisotropic kernel, and t time steps.
+    Keyword arguments: 
+    - dim: The number of dimensions to embed in. Must be specified if delta
+      isn't. Takes priority over delta when both are specified.
+    - delta: The accuracy parameter. Must be specified if dim isn't
+    - alpha: The parameter alpha for the anisotropic kernel. Defaults to 1
 
     Returns an array representing the embedded data.
     """
-    # first construct the similarity graph
-    W = construct_graph(data)
-    D_neg_alpha = numpy.diag([1 / (sum(W[:, i]))**alpha for i in range(num_points)])
+    # check arguments
+    try:
+        kwargs['dim'] or kwargs['delta']
+    except:
+        raise KeyError("Please enter either the number of dimensions or the " + \
+        "accuracy parameter delta as a keyword argument")
 
-    # find the normalized Markov matrix
-    W_alpha = numpy.matmul(D, numpy.matmul(W, D))
-    D_alpha_inv = numpy.diag([1 / sum(W_alpha[:, i]) for i in range(num_points)])
-    M = numpy.matmul(D_alpha_inv, W_alpha)
+    # look at other keyword arguments
+    try:
+        alpha = kwargs['alpha']
+    except:
+        alpha = 0
 
-    # find the appropriate power of the Markov matrix and compute its spectrum
-    M_t = matrix_power(M, t)
-    x, V = numpy.linalg.eig(M_t)
-    x = sorted(zip(x, range(len(x))), key=lambda x : x[0], reverse=True)
+    try:
+        t = kwargs['alpha']
+    except:
+        t = 2
 
-    em_mat = [] 
-    for i in range(em_dim):
-        eig = V[x[i][1]]
-        em_mat.append((x[i][0]**t)*eig)
+    num_points = len(data)
+    NUM_POINTS = range(num_points) # an iterator
 
-    em_mat = numpy.array(em_mat)
+    # construct the similarity graph and normalize as needed
+    #  K = construct_graph(data)
+    K = construct_graph(data)
+    V = [sum(K[:,i]) for i in NUM_POINTS]
+    D_inv_al = numpy.diag([V[i]**(-alpha) for i in NUM_POINTS])
+    K_al = numpy.matmul(D_inv_al, numpy.matmul(K, D_inv_al))
+    V_al_inv = numpy.diag([1/sum(K_al[:,i]) for i in NUM_POINTS])
+    M = numpy.matmul(V_al_inv, K_al)
 
-    return list(map(lambda x : numpy.matmul(em_mat, x), data))
+    # compute eigenvalues and right eigenvectors of M, and sort them
+    evals, evects = numpy.linalg.eig(M)
 
-def make_plots():
-    pass
+    # normalize the eigenvectors
+    evects = list(map(lambda x : x / norm(x), [evects[:, i] for i in \
+        NUM_POINTS]))
+
+    spectrum = sorted(zip(evals, [evects[i] for i in NUM_POINTS]), key=lambda\
+            x:x[0], reverse=True)
+
+    # compute the number of dimensions to embed in, if not already provided.
+    try: em_dim = kwargs['dim']
+    except:
+        delta = kwargs['delta'] # we have already checked that this exists
+        em_dim = 1
+        while spectrum[em_dim][0]**t > delta*spectrum[1][0]**t:
+            em_dim += 1
+
+    # find the data points
+    points = []
+    for i in NUM_POINTS:
+        points.append([])
+        for j in range(em_dim):
+            k = j+1
+            points[i].append(spectrum[k][0]*spectrum[k][1][i])
+
+    return points
