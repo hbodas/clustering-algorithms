@@ -49,7 +49,6 @@ def embed_data(data, **kwargs):
     NUM_POINTS = range(num_points) # an iterator
 
     # construct the similarity graph and normalize as needed
-    #  K = construct_graph(data)
     K = construct_graph(data)
     V = [sum(K[:,i]) for i in NUM_POINTS]
     D_inv_al = numpy.diag([V[i]**(-alpha) for i in NUM_POINTS])
@@ -83,4 +82,4 @@ def embed_data(data, **kwargs):
             k = j+1
             points[i].append(spectrum[k][0]*spectrum[k][1][i])
 
-    return points
+    return [points, spectrum]

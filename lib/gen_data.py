@@ -17,7 +17,7 @@ def generate_blobs(n, num_centers=3):
     """
     # sample the data
     data = make_blobs(n_samples = n, n_features = 2, centers = num_centers, \
-            cluster_std = 1.4, center_box = (-10, 10), shuffle = True, \
+            cluster_std = 0.8, center_box = (-5, 5), shuffle = True, \
             random_state = None)[0]
 
     print("Generated {} data points around {} means".format(n, num_centers,\
@@ -36,7 +36,7 @@ def generate_circles(n, noise=0.07, factor=0.40):
     print("Generated {} data points in concentric circles".format(n, flush=True))
     return data
 
-def generate_moons(n, noise = 0.07):
+def generate_moons(n, noise = 0.08):
     """
     Generates data sample around two half moons, with noise given by noise.
     """

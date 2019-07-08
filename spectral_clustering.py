@@ -61,4 +61,4 @@ def spec_cluster_data(data, k):
     for i in range(num_points):
         clusters[cluster_inds[i]].append(data[i])
     
-    return clusters
+    return [clusters, cluster_inds, x, U_trans]

@@ -12,6 +12,8 @@ plots of the data.
 from spectral_clustering import *
 from lib.gen_data import *
 import matplotlib.pyplot as plt
+from mpl_toolkits.mplot3d import Axes3D
+from itertools import combinations
 
 """
 Available functions to generate and cluster data (* indicates optional
@@ -36,23 +38,31 @@ generate_curve_data(n, curves*, bounds*, noise*)
     represents the standard deviation for the gaussian noise added
 """
 
+fig = plt.figure()
+data_plot = fig.add_subplot(221, aspect='equal', title = "Generated data")
+clustered = fig.add_subplot(223, aspect='equal', title = "Clustered data")
+spectrum = fig.add_subplot(122, adjustable='box', \
+        title = "Eigenvalues of $L$")
+plt.subplots_adjust(bottom = 0.2)
 
 n = 1000
 
-while True:
-    shape = input("""Pick a shape to generate synthetic data in:
-    1: Gaussians 
-    2: 2 Concentric Circles 
-    3: 2 half-moons 
-    4: Two predefined curves
->>> """)
-    try:
-        shape = int(shape)
-        if shape < 5 and 0 < shape:
-            break
-    except:
-        print("Invalid input. Please try again")
-        pass
+#  while True:
+    #  shape = input("""Pick a shape to generate synthetic data in:
+    #  1: Gaussians
+    #  2: 2 Concentric Circles
+    #  3: 2 half-moons
+    #  4: Two predefined curves
+#  >>> """)
+    #  try:
+        #  shape = int(shape)
+        #  if shape < 5 and 0 < shape:
+            #  break
+    #  except:
+        #  print("Invalid input. Please try again")
+        #  pass
+
+shape = 1
 
 data = {
         1 : generate_blobs,
@@ -69,15 +79,8 @@ for point in data:
     x.append(point[0])
     y.append(point[1])
  
-plt.gca().set_aspect('equal', adjustable='box')
-
 # plot the data
-plt.plot(x, y, color='gray', marker='o', linewidth='0')
-plt.show()
-
-# clear the figure
-plt.clf()
-plt.gca().set_aspect('equal', adjustable='box')
+data_plot.scatter(x, y, color='gray', marker='o', linewidth='0', s = 15)
 
 # do some clustering. The number of clusters is bounded by 10 right now.
 colors = ['red', 'green', 'blue', 'yellow', 'cyan', 'magenta', 'purple', \
@@ -94,8 +97,9 @@ while True:
 
 num_clusters = min(10, num_clusters)
 
-clusters = spec_cluster_data(data, num_clusters)
+clusters, cluster_inds, evals, U_trans = spec_cluster_data(data, num_clusters)
 
+# plot the clusters
 for i in range(num_clusters):
 
     x = []
@@ -105,6 +109,51 @@ for i in range(num_clusters):
         x.append(point[0])
         y.append(point[1])
 
-    plt.plot(x, y, color=colors[i], marker='o', linewidth='0')
+    clustered.scatter(x, y, color=colors[i], marker='o', linewidth='0', s = 15)
 
+# adjust bounds of the spectrum plot
+max_eval = evals[6][0]
+min_eval = evals[0][0]
+spectrum.set_ylim(bottom=min_eval*0.5, top=max_eval*1.1)
+
+# plot the spectrum
+points = list(zip(range(6), evals))
+x = [point[0] for point in points[:6]]
+y = [point[1][0] for point in points[:6]]
+spectrum.scatter(x, y, color='blue', marker='o', linewidth='1', s = 15)
+
+fig2 = plt.figure()
+
+#  Make the eigenvector plots
+tups = list(combinations(range(num_clusters), 2))
+plots = []
+for i in range(len(tups)):
+    subplot_index = 100 + 10 * len(tups) + i + 1
+    s_1 = U_trans[tups[i][0]]
+    str_1 = "$s_" + str(tups[i][0]) + "$"
+    s_2 = U_trans[tups[i][1]]
+    str_2 = "$s_" + str(tups[i][1]) + "$"
+    points = list(zip(s_1, s_2))
+
+    plots.append(fig2.add_subplot(subplot_index, \
+            xlabel = str_1, ylabel = str_2))
+    # create the clusters
+    clusts = [[] for i in range(num_clusters)]
+    for i in range(n):
+        (clusts[cluster_inds[i]]).append(points[i])
+
+    # now plot the clusters
+    for i in range(num_clusters):
+        x = []
+        y = []
+        for point in clusts[i]:
+            x.append(point[0])
+            y.append(point[1])
+
+        (plots[-1]).scatter(x, y, color=colors[i], s = 15, marker='o', linewidth='0')
+
+fig.tight_layout()
+fig2.tight_layout()
 plt.show()
+
+
