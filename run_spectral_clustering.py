@@ -39,10 +39,10 @@ generate_curve_data(n, curves*, bounds*, noise*)
 """
 
 fig = plt.figure()
-data_plot = fig.add_subplot(221, aspect='equal', title = "Generated data")
-clustered = fig.add_subplot(223, aspect='equal', title = "Clustered data")
-spectrum = fig.add_subplot(122, adjustable='box', \
-        title = "Eigenvalues of $L$")
+fig2 = plt.figure()
+data_plot = fig.add_subplot(131, aspect='equal')
+clustered = fig.add_subplot(132, aspect='equal')
+spectrum = fig.add_subplot(133, adjustable='box')
 plt.subplots_adjust(bottom = 0.2)
 
 n = 1000
@@ -111,18 +111,18 @@ for i in range(num_clusters):
 
     clustered.scatter(x, y, color=colors[i], marker='o', linewidth='0', s = 15)
 
-# adjust bounds of the spectrum plot
+#  adjust bounds of the spectrum plot
 max_eval = evals[6][0]
 min_eval = evals[0][0]
 spectrum.set_ylim(bottom=min_eval*0.5, top=max_eval*1.1)
 
-# plot the spectrum
+#  plot the spectrum
 points = list(zip(range(6), evals))
 x = [point[0] for point in points[:6]]
 y = [point[1][0] for point in points[:6]]
-spectrum.scatter(x, y, color='blue', marker='o', linewidth='1', s = 15)
+spectrum.scatter(x, y, color='blue', marker='o', linewidth='1', s = 30)
 
-fig2 = plt.figure()
+#  fig2 = plt.figure()
 
 #  Make the eigenvector plots
 tups = list(combinations(range(num_clusters), 2))

@@ -10,11 +10,10 @@ from diffusion_maps import *
 import matplotlib.pyplot as plt
 from mpl_toolkits.mplot3d import Axes3D
 fig = plt.figure()
-ax = fig.add_subplot(131, projection='3d')
-ax2 = fig.add_subplot(132)
-ax3 = fig.add_subplot(133, aspect=1/6)
+ax = fig.add_subplot(121, projection='3d')
+ax2 = fig.add_subplot(122)
 
-n = 5000 # the number of points
+n = 800 # the number of points
 
 # first generate the data and plot it (for swiss roll)
 roll, cs = generate_swiss_roll(n)
